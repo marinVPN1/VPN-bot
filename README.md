@@ -246,10 +246,11 @@ sudo ./install.sh
 
 Скрипт запросит:
 - Yookassa Shop ID и Secret Key
-- 3X-UI URL и Token
+- 3X-UI URL и Token (опционально, можно пропустить)
 - Telegram Bot Token
 - Admin Telegram ID
 - Домен для SSL
+- Email для SSL сертификатов
 
 ### Ручная установка
 

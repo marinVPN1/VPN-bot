@@ -125,12 +125,16 @@ echo "🔧 Configuring environment variables..."
 
 read -p "Enter Yookassa Shop ID: " YOOKASSA_SHOP_ID
 read -p "Enter Yookassa Secret Key: " YOOKASSA_SECRET_KEY
-read -p "Enter 3X-UI URL: " XUI_URL
-read -p "Enter 3X-UI Token: " XUI_TOKEN
+read -p "Enter 3X-UI URL (optional, press Enter to skip): " XUI_URL
+read -p "Enter 3X-UI Token (optional, press Enter to skip): " XUI_TOKEN
 read -p "Enter Telegram Bot Token: " TELEGRAM_BOT_TOKEN
 read -p "Enter Admin Telegram ID: " ADMIN_TELEGRAM_ID
 read -p "Enter Domain (e.g., vpn.example.com): " DOMAIN
 read -p "Enter SSL Email: " SSL_EMAIL
+
+# Set defaults for optional fields
+XUI_URL=${XUI_URL:-"https://your-xui-server.com"}
+XUI_TOKEN=${XUI_TOKEN:-"your_xui_token_here"}
 
 # Generate JWT secret
 JWT_SECRET=$(openssl rand -hex 32)
