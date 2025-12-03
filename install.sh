@@ -14,8 +14,17 @@ if [[ ! -f /etc/os-release ]]; then
 fi
 
 source /etc/os-release
-if [[ "$ID" != "ubuntu" || ("$VERSION_ID" != "22.04" && "$VERSION_ID" != "24.04") ]]; then
+echo "🔍 Detected OS: $ID $VERSION_ID"
+
+if [[ "$ID" != "ubuntu" ]]; then
+    echo "❌ This script is designed for Ubuntu Linux only"
+    echo "   Detected: $ID"
+    exit 1
+fi
+
+if [[ "$VERSION_ID" != "22.04" && "$VERSION_ID" != "24.04" ]]; then
     echo "❌ This script is designed for Ubuntu 22.04 or 24.04"
+    echo "   Detected version: $VERSION_ID"
     exit 1
 fi
 
