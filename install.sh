@@ -140,17 +140,26 @@ XUI_TOKEN=${XUI_TOKEN:-"your_xui_token_here"}
 JWT_SECRET=$(openssl rand -hex 32)
 
 cp .env.template .env
-sed -i "s/YOOKASSA_SHOP_ID=.*/YOOKASSA_SHOP_ID=$YOOKASSA_SHOP_ID/" .env
-sed -i "s/YOOKASSA_SECRET_KEY=.*/YOOKASSA_SECRET_KEY=$YOOKASSA_SECRET_KEY/" .env
-sed -i "s/XUI_URL=.*/XUI_URL=$XUI_URL/" .env
-sed -i "s/XUI_TOKEN=.*/XUI_TOKEN=$XUI_TOKEN/" .env
-sed -i "s/TELEGRAM_BOT_TOKEN=.*/TELEGRAM_BOT_TOKEN=$TELEGRAM_BOT_TOKEN/" .env
-sed -i "s/ADMIN_TELEGRAM_ID=.*/ADMIN_TELEGRAM_ID=$ADMIN_TELEGRAM_ID/" .env
-sed -i "s/DOMAIN=.*/DOMAIN=$DOMAIN/" .env
-sed -i "s/SSL_EMAIL=.*/SSL_EMAIL=$SSL_EMAIL/" .env
-sed -i "s/JWT_SECRET=.*/JWT_SECRET=$JWT_SECRET/" .env
+
+# Use a safer approach to replace values
+sed -i.bak \
+    -e "s/YOOKASSA_SHOP_ID=.*/YOOKASSA_SHOP_ID=$YOOKASSA_SHOP_ID/" \
+    -e "s/YOOKASSA_SECRET_KEY=.*/YOOKASSA_SECRET_KEY=$YOOKASSA_SECRET_KEY/" \
+    -e "s|XUI_URL=.*|XUI_URL=$XUI_URL|" \
+    -e "s/XUI_TOKEN=.*/XUI_TOKEN=$XUI_TOKEN/" \
+    -e "s/TELEGRAM_BOT_TOKEN=.*/TELEGRAM_BOT_TOKEN=$TELEGRAM_BOT_TOKEN/" \
+    -e "s/ADMIN_TELEGRAM_ID=.*/ADMIN_TELEGRAM_ID=$ADMIN_TELEGRAM_ID/" \
+    -e "s|DOMAIN=.*|DOMAIN=$DOMAIN|" \
+    -e "s/SSL_EMAIL=.*/SSL_EMAIL=$SSL_EMAIL/" \
+    -e "s/JWT_SECRET=.*/JWT_SECRET=$JWT_SECRET/" \
+    .env
+
+# Handle URLs separately with proper escaping
 sed -i "s|WEBHOOK_URL=.*|WEBHOOK_URL=https://$DOMAIN/api/payments/yookassa/webhook|" .env
 sed -i "s|BOT_WEBHOOK_URL=.*|BOT_WEBHOOK_URL=https://$DOMAIN/api/bot/webhook|" .env
+
+# Remove backup file
+rm -f .env.bak
 
 echo "✅ Environment configured"
 
