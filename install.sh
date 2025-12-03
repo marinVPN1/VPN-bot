@@ -69,7 +69,7 @@ if ! sudo systemctl is-active --quiet docker; then
 
     # Try to fix cgroups issue
     if [ -f /etc/default/grub ]; then
-        sudo sed -i 's/GRUB_CMDLINE_LINUX=""/GRUB_CMDLINE_LINUX="cgroup_enable=memory swapaccount=1"/' /etc/default/grub
+        sudo sed -i 's|GRUB_CMDLINE_LINUX=""|GRUB_CMDLINE_LINUX="cgroup_enable=memory swapaccount=1"|g' /etc/default/grub
         sudo update-grub
     fi
 
