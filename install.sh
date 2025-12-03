@@ -39,6 +39,14 @@ echo "✅ Docker installed"
 # git clone https://github.com/your-repo/vpn-bot.git
 # cd vpn-bot
 
+# Check if database.db exists
+if [ ! -f "database.db" ]; then
+    echo "❌ database.db not found! Please place your existing database.db file in the project root directory."
+    exit 1
+fi
+
+echo "✅ Existing database.db found"
+
 # Create .env file
 echo "🔧 Configuring environment variables..."
 
@@ -74,16 +82,6 @@ mkdir -p nginx/ssl
 
 # Start services
 echo "🐳 Starting Docker services..."
-sudo docker-compose up -d db
-sleep 10
-sudo docker-compose up -d backend
-sleep 5
-
-# Run migrations
-echo "🗄️ Running database migrations..."
-sudo docker-compose exec backend alembic upgrade head
-
-# Start all services
 sudo docker-compose up -d
 
 # Setup SSL

@@ -29,7 +29,7 @@
 
 ## 🛠 Технологии
 
-- **Backend**: Python FastAPI, PostgreSQL, SQLAlchemy
+- **Backend**: Python FastAPI, SQLite, SQLAlchemy
 - **Frontend**: Next.js 14, React, Tailwind CSS, shadcn/ui
 - **Bot**: Python aiogram 3
 - **Инфраструктура**: Docker, docker-compose, nginx, certbot
