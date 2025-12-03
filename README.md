@@ -242,6 +242,8 @@ sudo ./install.sh
 
 **Поддерживаемые ОС**: Ubuntu 22.04, Ubuntu 24.04
 
+**Важно**: Поместите ваш файл `users.db` в корень проекта перед запуском скрипта!
+
 Скрипт запросит:
 - Yookassa Shop ID и Secret Key
 - 3X-UI URL и Token
