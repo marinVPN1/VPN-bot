@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # VPN Bot Installer
-# This script installs the VPN subscription service on Ubuntu 22.04
+# This script installs the VPN subscription service on Ubuntu 22.04 or 24.04
 
 set -e
 
@@ -14,12 +14,12 @@ if [[ ! -f /etc/os-release ]]; then
 fi
 
 source /etc/os-release
-if [[ "$ID" != "ubuntu" || "$VERSION_ID" != "22.04" ]]; then
-    echo "❌ This script is designed for Ubuntu 22.04"
+if [[ "$ID" != "ubuntu" || ("$VERSION_ID" != "22.04" && "$VERSION_ID" != "24.04") ]]; then
+    echo "❌ This script is designed for Ubuntu 22.04 or 24.04"
     exit 1
 fi
 
-echo "✅ OS check passed"
+echo "✅ OS check passed (Ubuntu $VERSION_ID)"
 
 # Install Docker and Docker Compose
 echo "📦 Installing Docker and Docker Compose..."
