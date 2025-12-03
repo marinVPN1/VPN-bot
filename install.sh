@@ -32,16 +32,80 @@ echo "✅ OS check passed (Ubuntu $VERSION_ID)"
 
 # Install Docker and Docker Compose
 echo "📦 Installing Docker and Docker Compose..."
+
+# Remove any existing Docker installations
+echo "🧹 Removing any existing Docker installations..."
+sudo apt remove -y docker docker-engine docker.io containerd runc 2>/dev/null || true
+sudo apt purge -y docker-ce docker-ce-cli containerd.io 2>/dev/null || true
+sudo rm -rf /var/lib/docker /etc/docker
+sudo groupdel docker 2>/dev/null || true
+
+# Install dependencies
 sudo apt update
-sudo apt install -y apt-transport-https ca-certificates curl gnupg lsb-release
+sudo apt install -y apt-transport-https ca-certificates curl gnupg lsb-release uidmap
+
+# Add Docker's official GPG key
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+
+# Add Docker repository
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+# Update package index
 sudo apt update
+
+# Install Docker
+echo "🐳 Installing Docker..."
 sudo apt install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+
+# Start and enable Docker service
+echo "🔄 Starting Docker service..."
+sudo systemctl daemon-reload
 sudo systemctl start docker
 sudo systemctl enable docker
 
-echo "✅ Docker installed"
+# Check if Docker started successfully
+if ! sudo systemctl is-active --quiet docker; then
+    echo "❌ Docker service failed to start. Trying to fix common issues..."
+
+    # Try to fix cgroups issue
+    if [ -f /etc/default/grub ]; then
+        sudo sed -i 's/GRUB_CMDLINE_LINUX=""/GRUB_CMDLINE_LINUX="cgroup_enable=memory swapaccount=1"/' /etc/default/grub
+        sudo update-grub
+    fi
+
+    # Try alternative start method
+    sudo dockerd --iptables=false --bridge=none &
+
+    # Wait a bit
+    sleep 5
+
+    if ! sudo systemctl is-active --quiet docker && ! pgrep -f dockerd > /dev/null; then
+        echo "❌ Docker still not working. Please check system logs:"
+        echo "   sudo systemctl status docker.service"
+        echo "   journalctl -xeu docker.service"
+        echo ""
+        echo "🔧 You can try manual installation:"
+        echo "   curl -fsSL https://get.docker.com -o get-docker.sh"
+        echo "   sudo sh get-docker.sh"
+        exit 1
+    fi
+fi
+
+# Add current user to docker group (if not root)
+if [ "$EUID" -ne 0 ]; then
+    sudo usermod -aG docker $USER
+    echo "👤 Added $USER to docker group"
+    echo "   You may need to log out and back in for this to take effect"
+fi
+
+# Test Docker installation
+echo "🧪 Testing Docker installation..."
+if sudo docker run --rm hello-world > /dev/null 2>&1; then
+    echo "✅ Docker installed and working"
+else
+    echo "⚠️ Docker installed but test failed. This might be normal if running as non-root user."
+    echo "   Try: sudo docker run --rm hello-world"
+fi
 
 # Clone repository (assuming script is run in project directory)
 # If not, uncomment and modify:
