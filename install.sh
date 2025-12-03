@@ -112,13 +112,13 @@ fi
 # git clone https://github.com/your-repo/vpn-bot.git
 # cd vpn-bot
 
-# Check if database.db exists
-if [ ! -f "database.db" ]; then
-    echo "❌ database.db not found! Please place your existing database.db file in the project root directory."
+# Check if users.db exists
+if [ ! -f "users.db" ]; then
+    echo "❌ users.db not found! Please place your existing users.db file in the project root directory."
     exit 1
 fi
 
-echo "✅ Existing database.db found"
+echo "✅ Existing users.db found"
 
 # Create .env file
 echo "🔧 Configuring environment variables..."
